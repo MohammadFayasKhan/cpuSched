@@ -190,7 +190,7 @@ export default function App() {
   const { hasRun, compareMode, firstRun } = useSchedulerStore();
   const [showConfetti, setShowConfetti] = useState(false);
   const prevFirstRun = useRef(true);
-  const [leftPercent, setLeftPercent] = useState(34.5); // 34.5% left : 65.5% right
+  const [leftPercent, setLeftPercent] = useState(35.0); // 35.0% left : 65.0% right
   const isDragging = useRef(false);
   const layoutRef = useRef(null);
 

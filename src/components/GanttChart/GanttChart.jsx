@@ -179,12 +179,14 @@ export default function GanttChart() {
 
       <GanttPlayback />
 
-      <div id="gantt-export-area" ref={containerRef}>
+      <div id="gantt-export-area" ref={containerRef} style={{ width: '100%', minWidth: 0 }}>
         <div
           style={{
             overflowX: needsScroll ? 'auto' : 'hidden',
             overflowY: 'hidden',
             paddingBottom: '4px',
+            paddingLeft: '12px',
+            paddingRight: '12px',
           }}
         >
           <div
