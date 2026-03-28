@@ -1,0 +1,88 @@
+.algo-selector {
+  margin-bottom: 12px;
+}
+
+.algo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.algo-btn {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 10px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.algo-btn:hover {
+  border-color: var(--accent-cyan);
+  color: var(--text-primary);
+  background: rgba(0, 229, 255, 0.05);
+}
+
+.algo-btn:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+
+.algo-btn.active {
+  background: var(--accent-cyan);
+  color: var(--bg-base);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 16px rgba(0, 229, 255, 0.25);
+}
+
+.quantum-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease, margin 0.3s ease;
+}
+
+.quantum-row.visible {
+  max-height: 60px;
+  opacity: 1;
+}
+
+.quantum-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.quantum-input {
+  width: 80px;
+  text-align: center;
+}
+
+.compare-btn {
+  width: 100%;
+  justify-content: center;
+  border-color: var(--accent-orange);
+  color: var(--accent-orange);
+}
+
+.compare-btn:hover {
+  background: rgba(255, 107, 53, 0.1) !important;
+  border-color: var(--accent-orange) !important;
+  color: var(--accent-orange) !important;
+}

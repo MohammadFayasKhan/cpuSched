@@ -1,0 +1,206 @@
+.algo-info-box {
+  margin-top: 8px;
+}
+
+.algo-info-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.algo-info-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+}
+
+.algo-info-content {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.algo-info-name {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: 0.02em;
+  margin-bottom: 4px;
+}
+
+.algo-info-tagline {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.algo-info-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.algo-info-section {
+  margin-bottom: 16px;
+}
+
+.algo-info-section-title {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.algo-info-text {
+  font-size: 0.78rem;
+  color: var(--text-primary);
+  line-height: 1.7;
+  opacity: 0.85;
+}
+
+.algo-info-steps {
+  list-style: decimal;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.algo-info-steps li {
+  font-size: 0.75rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+  opacity: 0.85;
+}
+
+.algo-info-meta-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.algo-info-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.algo-info-meta-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.algo-info-meta-value {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+}
+
+.algo-info-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.algo-info-list li {
+  font-size: 0.75rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+  opacity: 0.85;
+  padding-left: 16px;
+  position: relative;
+}
+
+.algo-info-list li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--text-muted);
+}
+
+.algo-info-list.advantages li::before {
+  content: '✓';
+  color: var(--success);
+}
+
+.algo-info-list.disadvantages li::before {
+  content: '✗';
+  color: var(--error);
+}
+
+.algo-info-list.questions li::before {
+  content: '?';
+  color: var(--accent-gold);
+  font-weight: 700;
+}
+
+.interview-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: var(--accent-gold);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  padding: 6px 0;
+  transition: opacity 0.2s ease;
+}
+
+.interview-toggle:hover {
+  opacity: 0.8;
+}
+
+.interview-questions {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.interview-questions.open {
+  max-height: 300px;
+  margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .algo-info-toggle {
+    display: block;
+  }
+
+  .algo-info-content {
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 20px;
+    opacity: 0;
+    transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.3s ease;
+  }
+
+  .algo-info-content.expanded {
+    max-height: 2000px;
+    padding: 20px;
+    opacity: 1;
+  }
+}
