@@ -92,3 +92,24 @@ Contributions, issues, and feature requests are welcome! Feel free to check the 
 ## 📝 License
 
 This project is open-source and available under the [MIT License](LICENSE).
+
+---
+
+## 👨‍💻 Developed By
+
+<div align="center">
+  <h3><strong>Mohammad Fayas Khan</strong></h3>
+  <p><em>Computer Science Engineering student focused on AI, ML, and full-stack development. Passionate about building scalable, real-world solutions with strong engineering fundamentals.</em></p>
+
+  <p>
+    <a href="https://www.linkedin.com/in/mohammadfayaskhan" target="_blank">
+      <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" />
+    </a>&nbsp;
+    <a href="https://github.com/MohammadFayasKhan" target="_blank">
+      <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" />
+    </a>&nbsp;
+    <a href="https://www.instagram.com/fayaskhanx" target="_blank">
+      <img src="https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white" alt="Instagram" />
+    </a>
+  </p>
+</div>
