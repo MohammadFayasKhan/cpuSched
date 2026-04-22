@@ -16,7 +16,7 @@ export default function GanttPlayback() {
   const animFrameRef = useRef(null);
   const lastTimeRef = useRef(null);
 
-  const totalTime = timeline.length > 0 ? timeline[timeline.length - 1].end : 0;
+  const totalTime = timeline.length > 0 ? Math.max(...timeline.map(t => t.end)) : 0;
 
   const animate = useCallback(
     (timestamp) => {
@@ -24,14 +24,13 @@ export default function GanttPlayback() {
         lastTimeRef.current = timestamp;
       }
 
-      const delta = (timestamp - lastTimeRef.current) / 1000; // seconds
+      const delta = (timestamp - lastTimeRef.current) / 1000;
       lastTimeRef.current = timestamp;
 
-      const { playbackTime, playbackSpeed, isPlaying } = useSchedulerStore.getState();
+      const state = useSchedulerStore.getState();
+      if (!state.isPlaying) return;
 
-      if (!isPlaying) return;
-
-      const newTime = playbackTime + delta * playbackSpeed;
+      const newTime = state.playbackTime + delta * state.playbackSpeed;
 
       if (newTime >= totalTime) {
         setPlaybackTime(totalTime);

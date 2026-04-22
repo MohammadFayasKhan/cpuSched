@@ -1,0 +1,86 @@
+@keyframes slideInQueue {
+  0% {
+    transform: translateX(-20px) scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes transitionFlow {
+  0% {
+    stroke-dashoffset: 1000;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes pulseQueue {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+  }
+}
+
+@keyframes chipGlow {
+  0%, 100% {
+    box-shadow: 0 0 4px var(--chip-glow, rgba(59, 130, 246, 0.3));
+  }
+  50% {
+    box-shadow: 0 0 12px var(--chip-glow, rgba(59, 130, 246, 0.5));
+  }
+}
+
+.animate-slide-in-queue {
+  animation: slideInQueue 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-transition-flow {
+  animation: transitionFlow 0.6s ease-out forwards;
+}
+
+.animate-pulse-queue {
+  animation: pulseQueue 2s infinite;
+}
+
+.animate-chip-glow {
+  animation: chipGlow 1.5s infinite;
+}
+
+.queue-visualizer {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.queue-visualizer:hover {
+  border-color: rgba(0, 229, 255, 0.3);
+}
+
+.process-chip {
+  transition: all 0.2s ease;
+}
+
+.process-chip:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.flow-diagram-container {
+  transition: all 0.3s ease;
+}
+
+.flow-diagram-container:hover {
+  transform: scale(1.02);
+}

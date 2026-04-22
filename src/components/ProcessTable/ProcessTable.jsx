@@ -274,7 +274,7 @@ export default function ProcessTable() {
         </div>
         <button
           className="btn btn-primary run-btn"
-          onClick={runSimulation}
+          onClick={() => runSimulation(true)}
           disabled={isRunning}
         >
           {isRunning ? (

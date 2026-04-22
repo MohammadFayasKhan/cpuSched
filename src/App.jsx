@@ -8,44 +8,14 @@ import ProcessDetailsTable from './components/ProcessTable/ProcessDetailsTable';
 import ExplanationFeed from './components/ExplanationFeed/ExplanationFeed';
 import AlgoInfoBox from './components/AlgoInfoBox/AlgoInfoBox';
 import CompareMode from './components/CompareMode/CompareMode';
+import QueueMonitor from './components/QueueMonitor/QueueMonitor';
 import useSchedulerStore from './store/useSchedulerStore';
 import { loadFromURL } from './utils/exportUtils';
 import { getProcessColor } from './utils/colorUtils';
 import { useRef, useState } from 'react';
+import './animations/queueAnimations.css';
 
-function Confetti() {
-  const colors = ['#00e5ff', '#ff6b35', '#a855f7', '#22c55e', '#eab308', '#ec4899', '#38bdf8', '#f97316'];
-  const pieces = Array.from({ length: 50 }, (_, i) => ({
-    id: i,
-    left: Math.random() * 100,
-    color: colors[Math.floor(Math.random() * colors.length)],
-    delay: Math.random() * 2,
-    duration: 2 + Math.random() * 2,
-    size: 6 + Math.random() * 8,
-    rotation: Math.random() * 360,
-  }));
 
-  return (
-    <>
-      {pieces.map((p) => (
-        <div
-          key={p.id}
-          className="confetti-piece"
-          style={{
-            left: `${p.left}%`,
-            width: `${p.size}px`,
-            height: `${p.size}px`,
-            backgroundColor: p.color,
-            borderRadius: Math.random() > 0.5 ? '50%' : '2px',
-            animationDelay: `${p.delay}s`,
-            animationDuration: `${p.duration}s`,
-            transform: `rotate(${p.rotation}deg)`,
-          }}
-        />
-      ))}
-    </>
-  );
-}
 
 function ArrivalTimeline() {
   const { processes, hasRun, timeline } = useSchedulerStore();
@@ -187,9 +157,7 @@ function ArrivalTimeline() {
 }
 
 export default function App() {
-  const { hasRun, compareMode, firstRun } = useSchedulerStore();
-  const [showConfetti, setShowConfetti] = useState(false);
-  const prevFirstRun = useRef(true);
+  const { hasRun, compareMode } = useSchedulerStore();
   const [leftPercent, setLeftPercent] = useState(35.0); // 35.0% left : 65.0% right
   const isDragging = useRef(false);
   const layoutRef = useRef(null);
@@ -212,14 +180,7 @@ export default function App() {
     }
   }, []);
 
-  // Confetti on first run
-  useEffect(() => {
-    if (prevFirstRun.current && !firstRun && hasRun) {
-      setShowConfetti(true);
-      setTimeout(() => setShowConfetti(false), 4000);
-    }
-    prevFirstRun.current = firstRun;
-  }, [firstRun, hasRun]);
+
 
   // Drag handlers for the resize divider
   const handleMouseDown = useCallback((e) => {
@@ -252,7 +213,7 @@ export default function App() {
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Navbar />
 
-      {showConfetti && <Confetti />}
+
 
       <div className="main-layout" ref={layoutRef}>
         {/* Left Panel */}
@@ -283,6 +244,9 @@ export default function App() {
             <CompareMode />
           ) : (
             <>
+              <div className="queue-monitor-container space-y-4">
+                <QueueMonitor />
+              </div>
               <ArrivalTimeline />
               <GanttChart />
               <MetricsPanel />

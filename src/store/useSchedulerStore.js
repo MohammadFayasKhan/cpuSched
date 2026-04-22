@@ -3,6 +3,14 @@ import { getProcessColor } from '../utils/colorUtils';
 import { runAlgorithm } from '../algorithms';
 import { computeMetrics } from '../utils/metrics';
 
+export const PROCESS_STATES = {
+  NEW: 'new',
+  READY: 'ready',
+  RUNNING: 'running',
+  WAITING: 'waiting',
+  TERMINATED: 'terminated',
+};
+
 const DEFAULT_PROCESSES = [
   { id: 'P1', arrivalTime: 0, burstTime: 6, priority: 2 },
   { id: 'P2', arrivalTime: 1, burstTime: 4, priority: 1 },
@@ -42,9 +50,20 @@ const useSchedulerStore = create((set, get) => ({
   playbackTime: 0,
   playbackSpeed: 1,
 
+  // Queue Visualization State
+  readyQueue: [],
+  waitingQueue: [],
+  terminatedQueue: [],
+  runningProcess: null,
+  processStates: {},
+  stateTransitions: [],
+  activeTransition: null,
+  showQueueVisualizer: true,
+
   // Actions
-  setAlgorithm: (algo) =>
-    set({ algorithm: algo, hasRun: false, timeline: [], results: [], log: [], metrics: null, compareMode: false }),
+  setAlgorithm: (algo) => {
+    set({ algorithm: algo, hasRun: false, timeline: [], results: [], log: [], metrics: null, compareMode: false });
+  },
 
   setQuantum: (q) => set({ quantum: Math.max(1, parseInt(q) || 1) }),
 
@@ -116,11 +135,10 @@ const useSchedulerStore = create((set, get) => ({
     });
   },
 
-  runSimulation: () => {
+  runSimulation: (autoPlay = false) => {
     const { algorithm, processes, quantum, firstRun } = get();
     set({ isRunning: true });
 
-    // Small delay for perceived performance
     setTimeout(() => {
       try {
         const { timeline, results, log } = runAlgorithm(algorithm, processes, quantum);
@@ -135,8 +153,15 @@ const useSchedulerStore = create((set, get) => ({
           isRunning: false,
           firstRun: false,
           playbackTime: 0,
-          isPlaying: false,
+          isPlaying: autoPlay,
           compareMode: false,
+          readyQueue: [],
+          waitingQueue: [],
+          terminatedQueue: [],
+          runningProcess: null,
+          processStates: {},
+          stateTransitions: [],
+          activeTransition: null,
         });
       } catch (err) {
         console.error('Simulation error:', err);
@@ -175,6 +200,121 @@ const useSchedulerStore = create((set, get) => ({
   setPlaybackTime: (t) => set({ playbackTime: t }),
   setIsPlaying: (v) => set({ isPlaying: v }),
   setPlaybackSpeed: (s) => set({ playbackSpeed: s }),
+
+  // Queue Visualization Actions
+  updateProcessState: (pid, newState, metadata = {}) => set((state) => ({
+    processStates: { ...state.processStates, [pid]: newState },
+    runningProcess: newState === 'running' ? pid : 
+                    (state.runningProcess === pid ? null : state.runningProcess),
+  })),
+
+  addToReadyQueue: (pid) => set((state) => {
+    if (state.readyQueue.includes(pid)) return state;
+    return { readyQueue: [...state.readyQueue, pid] };
+  }),
+
+  removeFromReadyQueue: (pid) => set((state) => ({
+    readyQueue: state.readyQueue.filter((id) => id !== pid),
+  })),
+
+  addToWaitingQueue: (pid) => set((state) => {
+    if (state.waitingQueue.includes(pid)) return state;
+    return { waitingQueue: [...state.waitingQueue, pid] };
+  }),
+
+  removeFromWaitingQueue: (pid) => set((state) => ({
+    waitingQueue: state.waitingQueue.filter((id) => id !== pid),
+  })),
+
+  addToTerminatedQueue: (pid) => set((state) => {
+    if (state.terminatedQueue.includes(pid)) return state;
+    return { terminatedQueue: [...state.terminatedQueue, pid] };
+  }),
+
+  recordTransition: (transition) => set((state) => ({
+    stateTransitions: [...state.stateTransitions, transition],
+  })),
+
+  setActiveTransition: (transition) => set({ activeTransition: transition }),
+
+  clearActiveTransition: () => set({ activeTransition: null }),
+
+  toggleQueueVisualizer: () => set((state) => ({ showQueueVisualizer: !state.showQueueVisualizer })),
+
+  clearQueues: () => set({
+    readyQueue: [],
+    waitingQueue: [],
+    terminatedQueue: [],
+    runningProcess: null,
+    processStates: {},
+    stateTransitions: [],
+    activeTransition: null,
+  }),
+
+  // Initialize queues from timeline/log data
+  initializeQueuesFromLog: (log, processes) => {
+    const processStates = {};
+    processes.forEach(p => { processStates[p.id] = 'new'; });
+    
+    const readyQueue = [];
+    const waitingQueue = [];
+    const terminatedQueue = [];
+    let runningProcess = null;
+    
+    log.forEach((entry) => {
+      if (entry.pid && entry.event === 'dispatch') {
+        processStates[entry.pid] = 'running';
+        readyQueue.forEach(id => { processStates[id] = 'ready'; });
+        runningProcess = entry.pid;
+      } else if (entry.pid && entry.event === 'complete') {
+        processStates[entry.pid] = 'terminated';
+        if (runningProcess === entry.pid) runningProcess = null;
+      }
+    });
+    
+    processes.forEach(p => {
+      if (processStates[p.id] === 'new') {
+        readyQueue.push(p.id);
+        processStates[p.id] = 'ready';
+      }
+    });
+    
+    set({
+      processStates,
+      readyQueue,
+      waitingQueue,
+      terminatedQueue,
+      runningProcess,
+    });
+  },
+
+  // Update queues based on playback time
+  updateQueuesAtTime: (time, timeline, log) => {
+    const runningAtTime = timeline.find(t => t.pid !== 'idle' && t.start <= time && t.end >= time);
+    const completedBefore = timeline.filter(t => t.pid !== 'idle' && t.end <= time);
+    const startedBefore = timeline.filter(t => t.pid !== 'idle' && t.start <= time);
+    
+    const terminatedSet = new Set(completedBefore.map(t => t.pid));
+    const startedSet = new Set(startedBefore.map(t => t.pid));
+    
+    const runningProcess = runningAtTime ? runningAtTime.pid : null;
+    const terminatedQueue = Array.from(terminatedSet);
+    const readyQueue = Array.from(startedSet).filter(pid => 
+      !terminatedSet.has(pid) && pid !== runningProcess
+    );
+    
+    const runningState = {};
+    if (runningProcess) runningState[runningProcess] = 'running';
+    terminatedQueue.forEach(pid => { runningState[pid] = 'terminated'; });
+    readyQueue.forEach(pid => { runningState[pid] = 'ready'; });
+    
+    set({
+      readyQueue,
+      runningProcess,
+      terminatedQueue,
+      processStates: runningState,
+    });
+  },
 }));
 
 export default useSchedulerStore;

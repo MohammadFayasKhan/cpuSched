@@ -14,25 +14,7 @@ export default function ExplanationFeed() {
     return map;
   }, [processes]);
 
-  // Auto-scroll to current playback entry
-  useEffect(() => {
-    if (!containerRef.current || !isPlaying) return;
-
-    const currentIdx = log.findIndex((entry, i) => {
-      const nextEntry = log[i + 1];
-      return (
-        entry.time <= playbackTime &&
-        (!nextEntry || nextEntry.time > playbackTime)
-      );
-    });
-
-    if (currentIdx >= 0) {
-      const entries = containerRef.current.querySelectorAll('.log-entry');
-      if (entries[currentIdx]) {
-        entries[currentIdx].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-    }
-  }, [playbackTime, isPlaying, log]);
+  // Auto-scroll removed - no longer auto-scrolls during playback
 
   if (!hasRun || !log.length) return null;
 
